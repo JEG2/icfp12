@@ -1,0 +1,37 @@
+#!/usr/bin/env ruby -w
+
+require_relative "../lib/lambda_dash"
+
+unless ARGV.first
+  abort "USAGE:  #{$PROGRAM_NAME} PATH_TO_MAP"
+end
+
+def get_character
+  state = `stty -g`
+  system "stty raw -echo -icanon isig"
+  $stdin.getc
+ensure
+  system "stty #{state}" if state
+end
+
+map   = LambdaDash::Map.new(ARGV.first)
+robot = LambdaDash::Robot.new(map)
+
+clear = `clear`
+loop do
+  print clear
+  map.to_s.lines.zip(robot.to_s.lines) do |map_line, robot_line|
+    puts "#{map_line.chomp} #{robot_line}"
+  end
+  break if robot.game_over?
+
+  move = get_character.to_s.chars.first.upcase.tr("ILKJ", "URDL")
+  robot.move(move)
+  next if robot.game_over?
+
+  map.update(robot)
+  next if robot.game_over?
+end
+
+puts
+puts robot.moves
