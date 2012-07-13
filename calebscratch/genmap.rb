@@ -1,4 +1,8 @@
 #!/usr/bin/ruby
+if(ARGV.count != 7) 
+  puts "command is ./genmap.rb x_size y_size lambda% rock% earth% walls% empty%"
+  exit 0
+end
 length=ARGV[0].to_i
 width=ARGV[1].to_i
 total=percent_lambdas=ARGV[2].to_i
