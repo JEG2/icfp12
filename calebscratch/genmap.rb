@@ -37,6 +37,20 @@ map.each { |temp|
 potentialspots=length*2+width*2-4-1
 $stderr.puts "we need to evaluate #{potentialspots} spots on the map"
 map[rand(length)][rand(width)].replace("L")
+my_success=0
+$stderr.puts "my_success is set to #{my_success}"
+while my_success  < 1
+  $stderr.puts "placing robot"
+  randlength=rand(length)
+  randwidth=rand(width)
+  if( map[randlength][randwidth].eql? " ")
+    $stderr.puts "loc #{randlength},#{randwidth} (#{map[randlength][randwidth]}) is GREAT!!!"
+    map[randlength][randwidth].replace("R")
+    my_success = my_success+1
+  else
+    $stderr.puts " spot #{randlength} #{randwidth} is no good"
+  end
+end
 #generate some lambdas
 x=0
 y=0
@@ -54,7 +68,7 @@ map.each { |myrow|
         mycell.replace("/")
      elsif(myrand < percent_rocks+percent_lambdas)
         $stderr.puts "making this a rock"
-        mycell.replace("R")
+        mycell.replace("*")
      elsif(myrand < percent_rocks+percent_lambdas+percent_earth)
         $stderr.puts "making this a earth"
         mycell.replace(".")
