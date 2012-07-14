@@ -9,8 +9,9 @@
 module LambdaDash
   class Scorer
     def initialize(map, robot)
-      @map = map
-      @robot = robot
+      @map              = map
+      @robot            = robot
+      @max_lambda_score = 75
       
       # on intialize build an array of lambda locations in map
       @lambda_locations = @map.select { |cell| cell.lambda? }
@@ -24,6 +25,10 @@ module LambdaDash
     # abondon right now score
     
     # potential total score (collecting all lambda's and exiting the lift)
+    
+    def eds_algorithm
+      total_lambdas_on_map * 75 - exit_distance - distance_to_farthest_lambda
+    end
     
     def nearest_lambda
       if total_lambdas_on_map > 0
@@ -56,8 +61,12 @@ module LambdaDash
       if total_lambdas_on_map > 0
         remaining_lambdas
         a_lambda = @lambda_locations.first
-        distance = (a_lambda.x - @robot.x).abs + (a_lambda.y - @robot.y).abs
+        distance = distance_between( a_lambda.x,
+                                     a_lambda.y,
+                                     @robot.x,
+                                     @robot.y )
         lambda_location = [ a_lambda.x, a_lambda.y ]
+        
         @lambda_locations.each do |lambda|
           if (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs > distance
             distance = (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs
@@ -95,5 +104,12 @@ module LambdaDash
     # def algo_manhanttan
     #   @map.count { |cell| }
     # end
+    
+    private
+    
+    def distance_between ( x_1, y_1, x_2, y_2 )
+      (x_1 - x_2).abs + (y_1 - y_2).abs
+    end
+
   end
 end

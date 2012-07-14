@@ -13,6 +13,10 @@ describe LambdaDash::Scorer do
   let(:robot)  { LambdaDash::Robot.new(map)        }
   let(:scorer) { LambdaDash::Scorer.new(map,robot) }
   
+  it "Eds Magic Algorith to calculate estimate of potential max score" do
+    expect(scorer.eds_algorithm).to eq(213)
+  end
+  
   it "Knows sum total of lambda's left on map" do
     expect(scorer.total_lambdas_on_map).to eq(3)
   end
