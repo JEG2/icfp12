@@ -9,10 +9,11 @@ module LambdaDash
       @map               = map
       @lambdas_collected = 0
       @moves             = ""
+      @turns_underwater  = 0
       locate_self
     end
 
-    attr_reader :map, :x, :y, :lambdas_collected, :moves
+    attr_reader :map, :x, :y, :lambdas_collected, :moves, :turns_underwater
 
     def move(ascii)
       ascii.chars.each do |move|
@@ -33,6 +34,15 @@ module LambdaDash
 
     def game_over?
       @aborted or @on_lift or @dead or @moves.size >= map.max_moves
+    end
+
+    def check_water_level(level, waterproof)
+      if y <= level
+        @turns_underwater += 1
+        die if @turns_underwater >= waterproof
+      else
+        @turns_underwater = 0
+      end
     end
 
     def score
