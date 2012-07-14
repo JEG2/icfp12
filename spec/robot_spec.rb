@@ -64,4 +64,12 @@ describe LambdaDash::Robot do
     robot.move("A")
     expect(robot.game_over?).to be_true
   end
+
+  it "tracks a score" do
+    robot.move("D")
+    expect(robot.score).to eq(-1)
+
+    robot.move("L")
+    expect(robot.score).to eq(23)
+  end
 end
