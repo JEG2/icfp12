@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+$VERBOSE = true
+
+require_relative "../lib/lambda_dash"
+
+unless ARGV.first
+  abort "USAGE:  #{$PROGRAM_NAME} [-s] PATH_TO_MAP ALGORITHM"
+end
+show = ARGV.delete("-s")
+
+map    = LambdaDash::Map.new(ARGV.first)
+robot  = LambdaDash::Robot.new(map)
+search = LambdaDash::Search.new(robot, ARGV.last)
+
+clear = `clear`
+moves = search.find_moves
+moves.chars.each do |move|
+  if show
+    print clear
+    map.to_s.lines.zip(robot.to_s.lines) do |map_line, robot_line|
+      puts "#{map_line.chomp} #{robot_line}"
+    end
+  end
+  break if robot.game_over?
+
+  robot.move(move)
+  next if robot.game_over?
+
+  map.update(robot)
+  next if robot.game_over?
+end
+
+puts
+puts "score: #{robot.score}"
+puts "moves: #{robot.moves}"
