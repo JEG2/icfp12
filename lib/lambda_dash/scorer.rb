@@ -8,11 +8,12 @@
 
 module LambdaDash
   class Scorer
+    MAX_LAMBDA_SCORE       = 75
+    LAMBDA_COLLECTED_SCORE = 50
+    
     def initialize(map, robot)
-      @map                    = map
-      @robot                  = robot
-      @max_lambda_score       = 75
-      @lambda_collected_score = 50
+      @map   = map
+      @robot = robot
       
       # on intialize build an array of lambda locations in map
       @lambda_locations = @map.select { |cell| cell.lambda? }
@@ -36,8 +37,8 @@ module LambdaDash
     # Current score plus lambda's collected
     
     def james_algorithm
-      @robot.lambdas_collected * @lambda_collected_score + 
-      total_lambdas_on_map * @max_lambda_score + 
+      @robot.lambdas_collected * LAMBDA_COLLECTED_SCORE +
+      @lambda_locations.size   * MAX_LAMBDA_SCORE       +
       @robot.score
     end
     

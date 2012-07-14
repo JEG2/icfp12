@@ -57,22 +57,26 @@ module LambdaDash
     def pruned_search
       best  = Marshal.load(Marshal.dump(robot))
       queue = [best]
-      seen  = {best.map.to_s => best.score}
+      @seen = {best.map.to_s => best.score}
       while not time_up? and (current = queue.shift)
+        added_moves = false
         current.legal_moves.each do |move|
           new_move = Marshal.load(Marshal.dump(current))
           new_move.move(move)
           new_move.map.update(new_move) unless new_move.game_over?
           map_str   = new_move.map.to_s
           map_score = new_move.score
-          if not seen.include?(map_str) or map_score > seen[map_str]
-            seen[map_str] = map_score
+          unless prune?(best, new_move, map_str, map_score)
             if map_score > best.score
               best = new_move
             end
-            queue << new_move
+            unless new_move.game_over?
+              added_moves = true
+              queue << new_move
+            end
           end
         end
+        queue = prioritize_moves(queue) unless added_moves
       end
       best.moves
     end
@@ -81,6 +85,20 @@ module LambdaDash
 
     def time_up?
       @time_up
+    end
+
+    def prune?(best, robot, map_str, score)
+      if Scorer.new(robot.map, robot).james_algorithm >= best.score and
+         (not @seen.include?(map_str) or score > @seen[map_str])
+        @seen[map_str] = score
+        false
+      else
+        true
+      end
+    end
+
+    def prioritize_moves(queue)
+      queue.sort_by { |robot| -robot.score }
     end
   end
 end
