@@ -12,18 +12,25 @@ map    = LambdaDash::Map.new(ARGV.first)
 robot  = LambdaDash::Robot.new(map)
 search = LambdaDash::Search.new(robot, ARGV.last)
 
-clear = `clear`
-moves = search.find_moves
-moves.chars.each do |move|
+clear   = `clear`
+start   = Time.now
+moves   = search.find_moves.chars
+elapsed = Time.now - start
+if show
+  puts "Ready, press return to view..."
+  $stdin.gets
+end
+loop do
   if show
     print clear
     map.to_s.lines.zip(robot.to_s.lines) do |map_line, robot_line|
       puts "#{map_line.chomp} #{robot_line}"
     end
+    sleep 0.5
   end
   break if robot.game_over?
 
-  robot.move(move)
+  robot.move(moves.next)
   next if robot.game_over?
 
   map.update(robot)
@@ -31,5 +38,6 @@ moves.chars.each do |move|
 end
 
 puts
-puts "score: #{robot.score}"
-puts "moves: #{robot.moves}"
+puts " time:  %2ds" % elapsed
+puts "score:  #{robot.score}"
+puts "moves:  #{robot.moves}"

@@ -60,6 +60,28 @@ module LambdaDash
       moves.sub(/A\z/, "").size
     end
 
+    def legal_moves
+      return [ ] if game_over?
+      moves  = %w[W A]
+      moves << "U" if y < map.m                     and
+                      not map[x, y + 1].impassable? and
+                      not map[x, y + 1].rock?
+      moves << "D" if y > 1                         and
+                      not map[x, y - 1].impassable? and
+                      not map[x, y - 1].rock?
+      moves << "R" if ( x < map.n                       and
+                        not map[x + 1, y].impassable? ) or
+                      ( x < map.n - 1                   and
+                        map[x + 1, y].rock?             and
+                        map[x + 2, y].empty? )
+      moves << "L" if ( x > 1                           and
+                        not map[x - 1, y].impassable? ) or
+                      ( x > 2                           and
+                        map[x - 1, y].rock?             and
+                        map[x - 2, y].empty? )
+      moves
+    end
+
     def to_s
       " turn: #{move_count}/#{map.max_moves}\n" +
       "score: #{score}\n"                       +
