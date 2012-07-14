@@ -9,6 +9,7 @@ module LambdaDash
       @map               = map
       @lambdas_collected = 0
       @moves             = ""
+      @underwater        = 0
       locate_self
     end
 
@@ -33,6 +34,15 @@ module LambdaDash
 
     def game_over?
       @aborted or @on_lift or @dead or @moves.size >= map.max_moves
+    end
+
+    def check_water_level(level, waterproof)
+      if y <= level
+        @underwater += 1
+        die if @underwater >= waterproof
+      else
+        @underwater = 0
+      end
     end
 
     def score

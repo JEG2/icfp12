@@ -68,11 +68,13 @@ module LambdaDash
     end
 
     def initialize(map_name_or_cells)
+      @metadata = {water: 0, flooding: 0, waterproof: 10}
       if map_name_or_cells.is_a? Array
         build_map(map_name_or_cells)
       else
         load_map(map_name_or_cells)
       end
+      @water_level = @metadata[:water]
     end
 
     include Enumerable
@@ -121,10 +123,19 @@ module LambdaDash
           robot.die
         end
       end
+      @water_level = @metadata[:water] + robot.moves.size / @metadata[:flooding]
+      robot.check_water_level(@water_level, @metadata[:waterproof])
     end
 
     def to_s
-      @cells.map { |row| "#{row.join}\n" }.join
+      @cells.map.with_index { |row, y|
+        line = "#{row.join}\n"
+        if m - y == @water_level
+          line.sub!(/\A\s*#/)    { |pre| "~" * pre.size }
+          line.sub!(/#[ \t]*\Z/) { |pos| "~" * pos.size }
+        end
+        line
+      }.join
     end
 
     private
@@ -136,7 +147,12 @@ module LambdaDash
     end
 
     def load_map(name)
-      lines  = File.readlines(self.class.path(name)).map(&:chomp)
+      lines = File.readlines(self.class.path(name)).map(&:chomp)
+      while lines.last =~ /\A(\w+)\s+(\d+)/
+        @metadata[$1.downcase.to_sym] = $2.to_i
+        lines.pop
+      end
+      lines.pop unless lines.last =~ /\S/
       n      = lines.map(&:size).max
       @cells = Array.new(lines.size) { |y|
         Array.new(n) { |x| Cell.new(lines[y][x] || " ", x + 1, lines.size - y) }
