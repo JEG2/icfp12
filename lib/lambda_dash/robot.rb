@@ -33,7 +33,7 @@ module LambdaDash
     end
 
     def game_over?
-      @aborted or @on_lift or @dead or @moves.size >= map.max_moves
+      @aborted or @on_lift or @dead or move_count >= map.max_moves
     end
 
     def check_water_level(level, waterproof)
@@ -46,7 +46,7 @@ module LambdaDash
     end
 
     def score
-      score = 25 * @lambdas_collected - @moves.size
+      score = 25 * @lambdas_collected - move_count
       if @aborted
         score + 25 * @lambdas_collected
       elsif @on_lift
@@ -56,10 +56,14 @@ module LambdaDash
       end
     end
 
+    def move_count
+      moves.sub(/A\z/, "").size
+    end
+
     def to_s
-      " turn: #{moves.size}/#{map.max_moves}\n" +
+      " turn: #{move_count}/#{map.max_moves}\n" +
       "score: #{score}\n"                       +
-      "moves: #{@moves.size > 10 ? "…#{moves[-10..-1]}" : moves}\n"
+      "moves: #{move_count > 10 ? "…#{moves[-10..-1]}" : moves}\n"
     end
 
     private
