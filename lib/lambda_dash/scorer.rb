@@ -34,10 +34,16 @@ module LambdaDash
       if total_lambdas_on_map > 0
         remaining_lambdas
         a_lambda = @lambda_locations.first
-        distance = (a_lambda.x - @robot.x).abs + (a_lambda.y - @robot.y).abs
+        distance = distance_between( a_lambda.x,
+                                     a_lambda.y,
+                                     @robot.x,
+                                     @robot.y )
         lambda_location = [ a_lambda.x, a_lambda.y ]
         @lambda_locations.each do |lambda|
-          if (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs < distance
+          if distance_between( lambda.x, 
+                               lambda.y,
+                               @robot.x,
+                               @robot.y ) < distance
             distance = (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs
             lambda_location = [lambda.x, lambda.y]
           end
@@ -51,7 +57,7 @@ module LambdaDash
     def distance_to_nearest_lambda
       lambda = nearest_lambda
       if lambda
-        distance = (lambda[0] - @robot.x).abs + (lambda[1] - @robot.y).abs
+        (lambda[0] - @robot.x).abs + (lambda[1] - @robot.y).abs
       else
         nil
       end
@@ -68,7 +74,10 @@ module LambdaDash
         lambda_location = [ a_lambda.x, a_lambda.y ]
         
         @lambda_locations.each do |lambda|
-          if (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs > distance
+          if distance_between( lambda.x, 
+                               lambda.y,
+                               @robot.x,
+                               @robot.y ) > distance
             distance = (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs
             lambda_location = [lambda.x, lambda.y]
           end
@@ -82,7 +91,7 @@ module LambdaDash
     def distance_to_farthest_lambda
       lambda = farthest_lambda
       if lambda
-        distance = (lambda[0] - @robot.x).abs + (lambda[1] - @robot.y).abs
+        (lambda[0] - @robot.x).abs + (lambda[1] - @robot.y).abs
       else
         nil
       end
