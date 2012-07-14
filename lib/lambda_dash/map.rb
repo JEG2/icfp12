@@ -126,7 +126,7 @@ module LambdaDash
         end
       end
       @water_level  = @metadata[:water]
-      @water_level += robot.moves.size / @metadata[:flooding] \
+      @water_level += robot.move_count / @metadata[:flooding] \
         if @metadata[:flooding].nonzero?
       robot.check_water_level(@water_level, @metadata[:waterproof])
     end
