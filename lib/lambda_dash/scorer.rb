@@ -44,7 +44,10 @@ module LambdaDash
                                lambda.y,
                                @robot.x,
                                @robot.y ) < distance
-            distance = (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs
+            distance = distance_between( lambda.x,
+                                         lambda.y,
+                                         @robot.x,
+                                         @robot.y )
             lambda_location = [lambda.x, lambda.y]
           end
         end
@@ -78,7 +81,10 @@ module LambdaDash
                                lambda.y,
                                @robot.x,
                                @robot.y ) > distance
-            distance = (lambda.x - @robot.x).abs + (lambda.y - @robot.y).abs
+            distance = distance_between( lambda.x,
+                                         lambda.y,
+                                         @robot.x,
+                                         @robot.y )
             lambda_location = [lambda.x, lambda.y]
           end
         end
