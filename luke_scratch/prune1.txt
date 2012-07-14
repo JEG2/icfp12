@@ -1,0 +1,61 @@
+First Pruning Algorithm output:
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest1.map pruned_search
+
+ time:   3s
+score:  212
+moves:  DLRDDUULLDLDL
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest2.map pruned_search
+
+ time:  150s
+score:  187
+moves:  RRUDRRULURULLA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest3.map pruned_search
+
+ time:  150s
+score:  94
+moves:  RDDDLLA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest4.map pruned_search
+
+ time:  150s
+score:  241
+moves:  DDRDRDRRRA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest5.map pruned_search
+
+ time:  150s
+score:  338
+moves:  LLUUURUURRRRA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest6.map pruned_search
+
+ time:  150s
+score:  79
+moves:  RUULRRRRRRRRRRUUURUURA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest7.map pruned_search
+
+ time:  150s
+score:  435
+moves:  RDRRRDDLRDRDRRRA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest8.map pruned_search
+
+ time:  150s
+score:  145
+moves:  RRRRRA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest9.map pruned_search
+
+ time:  150s
+score:  242
+moves:  LURURRRDA
+
+luke-dewitts-macbook-pro:icfp12 Luke$ bin/simulate data/contest10.map pruned_search
+
+ time:  150s
+score:  242
+moves:  UULLLLLUA

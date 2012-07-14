@@ -9,9 +9,10 @@
 module LambdaDash
   class Scorer
     def initialize(map, robot)
-      @map              = map
-      @robot            = robot
-      @max_lambda_score = 75
+      @map                    = map
+      @robot                  = robot
+      @max_lambda_score       = 75
+      @lambda_collected_score = 50
       
       # on intialize build an array of lambda locations in map
       @lambda_locations = @map.select { |cell| cell.lambda? }
@@ -25,6 +26,20 @@ module LambdaDash
     # abondon right now score
     
     # potential total score (collecting all lambda's and exiting the lift)
+    # Assume every lambda on the board take robots current score
+    # add all lambda's left on the board at the 25 rate then
+    # assume he hits the gate 
+    
+    # Adding the robots current score add all the Lambda's at 25
+    # add his lambda's collect plus the number left on the board times 50
+    
+    # Current score plus lambda's collected
+    
+    def james_algorithm
+      @robot.lambdas_collected * @lambda_collected_score + 
+      total_lambdas_on_map * @max_lambda_score + 
+      @robot.score
+    end
     
     def eds_algorithm
       total_lambdas_on_map * 75 - exit_distance - distance_to_farthest_lambda
