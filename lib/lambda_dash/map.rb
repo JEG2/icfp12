@@ -77,6 +77,8 @@ module LambdaDash
       @water_level = @metadata[:water]
     end
 
+    attr_reader :metadata, :water_level
+
     include Enumerable
 
     def n
@@ -123,7 +125,9 @@ module LambdaDash
           robot.die
         end
       end
-      @water_level = @metadata[:water] + robot.moves.size / @metadata[:flooding]
+      @water_level  = @metadata[:water]
+      @water_level += robot.moves.size / @metadata[:flooding] \
+        if @metadata[:flooding].nonzero?
       robot.check_water_level(@water_level, @metadata[:waterproof])
     end
 
