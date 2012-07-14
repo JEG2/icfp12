@@ -76,7 +76,7 @@ module LambdaDash
             end
           end
         end
-        queue = prioritize_moves(queue) unless added_moves
+        queue = prioritize_moves(queue) if added_moves
       end
       best.moves
     end
