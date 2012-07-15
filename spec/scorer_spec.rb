@@ -13,6 +13,14 @@ describe LambdaDash::Scorer do
   let(:robot)  { LambdaDash::Robot.new(map)        }
   let(:scorer) { LambdaDash::Scorer.new(map,robot) }
   
+  # it "Creates a heat map" do
+  #   expect(scorer.heat_map).to eq('blah')
+  # end
+  
+  it "Knows the abandon mine score" do
+    expect(scorer.score_abandon_now).to eq(0)
+  end
+  
   it "Knows Jame's Magic Algorithm to calculate max score" do
     expect(scorer.james_algorithm).to eq(225)
   end

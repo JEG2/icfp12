@@ -9,36 +9,6 @@ score:  739
 moves:  DLLLLLLLLLL
 ../data/basic_boulder.map
 
- time:  0.28s
-score:  212
-moves:  DLRDDLRULLLDL
-../data/contest1.map
-
- time:  0.88s
-score:  29
-moves:  LLLLLLLLLLLLLLLDDLDLDA
-../data/basic_tumble_breakeven.map
-
- time:  3.83s
-score:  270
-moves:  UURURLLDDDRRUDRRULUURWLDLLDLDL
-
- time:  3.82s
-score:  791
-moves:  UUUUULLLLLLUUUUULLUULLLDRDUUUUUUURRRUDLLUUURRRDRRRRLLUURRRRA
-../data/contest2.map
-../data/contest10.map
-
- time:  0.01s
-score:  665
-moves:  LLLLLLLLLL
-../data/basic_move.map
-
- time:  0.55s
-score:  739
-moves:  DLLLLLLLLLL
-../data/basic_boulder.map
-
  time:  0.29s
 score:  212
 moves:  DLRDDLRULLLDL
@@ -122,3 +92,5 @@ moves:  DDDDLRDRRRDUUUUUUUULULLLLLLUULLLLLLUURRA
  time:  150.00s
 score:  325
 moves:  DRDDRRDUUURRUULURDDDLDDDRA
+../data/flood5.map
+Total 11286
