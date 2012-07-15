@@ -1,1 +1,7 @@
-for File in ../data/*; do ./simulate -s ../data/contest4.map pruned_search > ../doc/maprun.txt; done
+#!/bin/bash
+
+for File in ../data/*
+do
+	echo $File
+	./simtests $File
+done
