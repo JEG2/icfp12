@@ -10,13 +10,17 @@ module LambdaDash
   class Scorer
     MAX_LAMBDA_SCORE       = 75
     LAMBDA_COLLECTED_SCORE = 50
+
+    def self.manhattan_distance(x1, y1, x2, y2)
+      (x1 - x2).abs + (y1 - y2).abs
+    end
     
     def initialize(map, robot)
       @map   = map
       @robot = robot
       
       # on intialize build an array of lambda locations in map
-      @lambda_locations = @map.select { |cell| cell.lambda? }
+      @lambda_locations = @map.lambdas
       
       # p @lambda_locations.map { |cell| [cell.x, cell.y] }
     end
@@ -43,7 +47,7 @@ module LambdaDash
     end
     
     def eds_algorithm
-      total_lambdas_on_map * 75 - exit_distance - distance_to_farthest_lambda
+      @lambda_locations.size * 75 - exit_distance - distance_to_farthest_lambda
     end
     
     def nearest_lambda
@@ -83,31 +87,10 @@ module LambdaDash
     end
     
     def farthest_lambda
-      if total_lambdas_on_map > 0
-        remaining_lambdas
-        a_lambda = @lambda_locations.first
-        distance = distance_between( a_lambda.x,
-                                     a_lambda.y,
-                                     @robot.x,
-                                     @robot.y )
-        lambda_location = [ a_lambda.x, a_lambda.y ]
-        
-        @lambda_locations.each do |lambda|
-          if distance_between( lambda.x, 
-                               lambda.y,
-                               @robot.x,
-                               @robot.y ) > distance
-            distance = distance_between( lambda.x,
-                                         lambda.y,
-                                         @robot.x,
-                                         @robot.y )
-            lambda_location = [lambda.x, lambda.y]
-          end
-        end
-        return lambda_location
-      else
-        nil
-      end
+      l = @lambda_locations.max_by { |cell|
+        distance_between(cell.x, cell.y, @robot.x, @robot.y)
+      }
+      [l.x, l.y] if l
     end
     
     def distance_to_farthest_lambda
@@ -115,7 +98,7 @@ module LambdaDash
       if lambda
         (lambda[0] - @robot.x).abs + (lambda[1] - @robot.y).abs
       else
-        nil
+        0
       end
     end
     
@@ -128,7 +111,7 @@ module LambdaDash
     end
     
     def exit_distance
-      lift = @map.find { |cell| cell.lift? }
+      lift = @map.lifts.first
       (lift.x - @robot.x).abs + (lift.y - @robot.y).abs
     end
     

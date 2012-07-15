@@ -1,0 +1,46 @@
+#!/bin/bash
+NUM=0
+QUEUE=""
+
+function queue {
+	QUEUE="$QUEUE $1"
+	NUM=$(($NUM+1))
+}
+
+function regeneratequeue {
+		OLDREQUEUE=$QUEUE
+		QUEUE=""
+		NUM=0
+		for PID in $OLDREQUEUE
+		do
+			PIDF=`ps axc | grep -i $PID | awk "{ print \$PID}";`
+			if [  $PIDF ] ; then
+				QUEUE="$QUEUE $PID"
+				NUM=$(($NUM+1))
+			fi
+		done
+} 
+
+function checkqueue {
+	OLDCHQUEUE=$QUEUE
+	for PID in $OLDCHQUEUE
+	do
+		PIDF=`ps axc | grep -i $PID | awk "{ print \$PID}";`
+		if [ ! $PIDF ] ; then
+			regeneratequeue
+			break
+		fi
+	done
+}
+ 
+for File in ../data/*
+do
+	./simtests $File &
+	PID=$!
+	queue $PID
+
+	while [ $NUM -ge 2 ]; do
+		checkqueue
+		sleep 0.4
+	done
+done

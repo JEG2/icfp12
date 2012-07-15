@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./simulate $1 pruned_search | tee -a ../doc/maprun.txt
+echo $1 | tee -a ../doc/maprun.txt
