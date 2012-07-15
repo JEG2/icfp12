@@ -54,7 +54,6 @@ module LambdaDash
       end
     end
 
-    # RRUDRRULUURWLLLDDLDL
     def pruned_search
       best  = robot.dup
       queue = [best]

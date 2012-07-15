@@ -129,6 +129,7 @@ module LambdaDash
         elsif not map[to_x, to_y].rock?
           if map[to_x, to_y].lambda?
             @lambdas_collected += 1
+            map.lambdas.delete_if { |l| l.x == to_x && l.y == to_y }
           elsif map[to_x, to_y].open_lift?
             @on_lift = true
           end

@@ -16,7 +16,7 @@ module LambdaDash
       @robot = robot
       
       # on intialize build an array of lambda locations in map
-      @lambda_locations = @map.select { |cell| cell.lambda? }
+      @lambda_locations = @map.lambdas
       
       # p @lambda_locations.map { |cell| [cell.x, cell.y] }
     end

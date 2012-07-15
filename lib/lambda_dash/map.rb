@@ -74,14 +74,29 @@ module LambdaDash
         load_map(map_name_or_cells)
       end
       @water_level = @metadata[:water]
+      @lambdas     = [ ]
+      @lifts       = [ ]
+      @rocks       = [ ]
+      each do |cell|
+        if cell.lambda?
+          @lambdas << cell
+        elsif cell.lift?
+          @lifts << cell
+        elsif cell.rock?
+          @rocks << cell
+        end
+      end
     end
 
     def initialize_copy(_)
       super
-      @cells = @cells.map { |row| row.dup }
+      @cells   = @cells.map { |row| row.dup }
+      @lambdas = @lambdas.dup
+      @lifts   = @lifts.dup
+      @rocks   = @rocks.dup
     end
 
-    attr_reader :metadata, :water_level
+    attr_reader :metadata, :water_level, :lambdas, :lifts, :rocks
 
     include Enumerable
 
@@ -102,7 +117,17 @@ module LambdaDash
     end
 
     def []=(x, y, ascii)
-      @cells[m - y][x - 1] = Cell.new(ascii, x, y)
+      mx  = x - 1
+      my  = m - y
+      old = @cells[my][mx]
+      if old.rock? # and (ascii == " " or ascii == "*" or ascii == "R")
+        @rocks.delete(old)
+      end
+      @cells[my][mx] = Cell.new(ascii, x, y)
+      if ascii == "*"
+        @rocks << @cells[my][mx]
+        @rocks.sort_by! { |cell| [cell.x, cell.y] }
+      end
     end
 
     def each
@@ -114,16 +139,16 @@ module LambdaDash
     end
 
     def update(robot)
-      updates = {cells: [ ], lifts: [ ], lambdas: 0}
-      each do |cell|
+      updates = [ ]
+      @rocks.each do |cell|
         update_cell(cell, updates)
       end
-      if updates[:lambdas].zero?
-        updates[:lifts].each do |lift_x, lift_y|
-          self[lift_x, lift_y] = "O"
+      if @lambdas.empty?
+        @lifts.each do |lift|
+          self[lift.x, lift.y] = "O"
         end
       end
-      updates[:cells].each do |x, y, ascii|
+      updates.each do |x, y, ascii|
         self[x, y] = ascii
         if ascii == "*" and y > 1 and self[x, y - 1].robot?
           robot.die
@@ -170,28 +195,20 @@ module LambdaDash
 
     def update_cell(cell, updates)
       x, y = cell.x, cell.y
-      if cell.closed_lift?
-        updates[:lifts] << [x, y]
-      elsif cell.lambda?
-        updates[:lambdas] += 1
-      elsif cell.rock? and y > 1
+      if y > 1
         if self[x, y - 1].empty?
-          updates[:cells] << [x, y,     " "] <<
-                             [x, y - 1, "*"]
+          updates.push([x, y, " "], [x, y - 1, "*"])
         elsif self[x, y - 1].rock?
           if x < n and self[x + 1, y].empty? and self[x + 1, y - 1].empty?
-            updates[:cells] << [x,     y,     " "] <<
-                               [x + 1, y - 1, "*"]
+            updates.push([x, y, " "], [x + 1, y - 1, "*"])
           elsif x > 1 and self[x - 1, y].empty? and self[x - 1, y - 1].empty?
-            updates[:cells] << [x,     y,     " "] <<
-                               [x - 1, y - 1, "*"]
+            updates.push([x, y, " "], [x - 1, y - 1, "*"])
           end
         elsif self[x, y - 1].lambda? and
               x < n                  and
               self[x + 1, y].empty?  and
               self[x + 1, y - 1].empty?
-          updates[:cells] << [x,     y,     " "] <<
-                             [x + 1, y - 1, "*"]
+          updates.push([x, y, " "], [x + 1, y - 1, "*"])
         end
       end
     end
