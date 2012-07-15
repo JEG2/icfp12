@@ -1,14 +1,13 @@
 module LambdaDash
   class Search
-    def initialize(robot, algorithm)
-      @map       = robot.map
-      @robot     = robot
-      @algorithm = algorithm
-
-      raise "Unknown algorithm" unless respond_to? @algorithm
+    def initialize(robot)
+      @map     = robot.map
+      @robot   = robot
+      @time_up = false
     end
 
     attr_reader :map, :robot, :algorithm
+    attr_writer :time_up
 
     def find_moves
       reader, writer = IO.pipe

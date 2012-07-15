@@ -4,17 +4,16 @@ $VERBOSE = true
 require_relative "../lib/lambda_dash"
 
 unless ARGV.first
-  abort "USAGE:  #{$PROGRAM_NAME} [-s] PATH_TO_MAP ALGORITHM"
+  abort "USAGE:  #{$PROGRAM_NAME} [-s] PATH_TO_MAP"
 end
 show = ARGV.delete("-s")
 
-map    = LambdaDash::Map.new(ARGV.first)
-robot  = LambdaDash::Robot.new(map)
-search = LambdaDash::Search.new(robot, ARGV.last)
+map   = LambdaDash::Map.new(ARGV.first)
+robot = LambdaDash::Robot.new(map)
 
 clear   = `clear`
 start   = Time.now
-moves   = search.find_moves.chars
+moves   = LambdaDash::Simulator.simulate(ARGV.first).chars
 elapsed = Time.now - start
 if show
   puts "Ready, press return to view..."
