@@ -54,6 +54,7 @@ end
 #generate some lambdas
 x=0
 y=0
+#add basic features to map
 map.each { |myrow|
   x=x+1
   y=0
@@ -81,6 +82,8 @@ map.each { |myrow|
    end
   } 
 }
+#add beard to map
+
 
 
 map.each { |myrow|
