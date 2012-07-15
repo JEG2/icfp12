@@ -1,7 +1,11 @@
 #!/bin/bash
-
+ 
 for File in ../data/*
 do
-	echo $File
-	./simtests $File
+	./simtests $File &
+	NPROC=$(($NPROC+1))
+	if [ "$NPROC" -ge 4 ]; then
+		wait
+		NPROC=0
+	fi	
 done
