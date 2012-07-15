@@ -122,7 +122,15 @@ module LambdaDash
 
     def try_move(to_x, to_y, rock_pushed = nil)
       unless map[to_x, to_y].impassable?
-        if map[to_x, to_y].rock? and
+        if map[to_x, to_y].trampoline?
+          target = map.trampolines[map[to_x, to_y]]
+          move_to(target.x, target.y)
+          map.trampolines.each do |trampoline, other_target|
+            if target == other_target
+              map[trampoline.x, trampoline.y] = " "
+            end
+          end
+        elsif map[to_x, to_y].rock? and
            rock_pushed.to_i > 0  and
            map[rock_pushed, to_y].empty?
           map[rock_pushed, to_y] = "*"

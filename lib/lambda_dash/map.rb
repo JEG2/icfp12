@@ -46,7 +46,15 @@ module LambdaDash
       end
 
       def impassable?
-        wall? or closed_lift?
+        wall? or closed_lift? or target?
+      end
+
+      def trampoline?
+        @ascii =~ /\A[A-I]\z/
+      end
+
+      def target?
+        @ascii =~ /\A[1-9]\z/
       end
 
       def to_s
@@ -67,7 +75,7 @@ module LambdaDash
     end
 
     def initialize(map_name_or_cells)
-      @metadata = {water: 0, flooding: 0, waterproof: 10}
+      @metadata = {water: 0, flooding: 0, waterproof: 10, trampolines: { }}
       if map_name_or_cells.is_a? Array
         build_map(map_name_or_cells)
       else
@@ -77,6 +85,8 @@ module LambdaDash
       @lambdas     = [ ]
       @lifts       = [ ]
       @rocks       = [ ]
+      trampolines  = { }
+      targets      = { }
       each do |cell|
         if cell.lambda?
           @lambdas << cell
@@ -84,8 +94,15 @@ module LambdaDash
           @lifts << cell
         elsif cell.rock?
           @rocks << cell
+        elsif cell.trampoline?
+          trampolines[cell.to_s] = cell
+        elsif cell.target?
+          targets[cell.to_s] = cell
         end
       end
+      @trampolines = Hash[ trampolines.map { |ascii, cell|
+        [cell, targets[@metadata[:trampolines][ascii]]]
+      } ]
     end
 
     def initialize_copy(_)
@@ -96,7 +113,7 @@ module LambdaDash
       @rocks   = @rocks.dup
     end
 
-    attr_reader :metadata, :water_level, :lambdas, :lifts, :rocks
+    attr_reader :metadata, :water_level, :lambdas, :lifts, :rocks, :trampolines
 
     include Enumerable
 
@@ -191,9 +208,15 @@ module LambdaDash
 
     def load_map(name)
       lines = File.readlines(self.class.path(name)).map(&:chomp)
-      while lines.last =~ /\A(\w+)\s+(\d+)/
-        @metadata[$1.downcase.to_sym] = $2.to_i
-        lines.pop
+      while lines.last =~ / \A (?: Trampoline\s+([A-I])\s+targets\s+([1-9]) |
+                                   (\w+)\s+(\d+) ) \Z /x
+        if $1
+          @metadata[:trampolines][$1] = $2
+          lines.pop
+        else
+          @metadata[$1.downcase.to_sym] = $2.to_i
+          lines.pop
+        end
       end
       lines.pop unless lines.last =~ /\S/
       n      = lines.map(&:size).max

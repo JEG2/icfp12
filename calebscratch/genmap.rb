@@ -14,7 +14,7 @@ $stderr.puts "arg0 = #{length}, arg1 = #{width}, lambdas = #{percent_rocks}, roc
 $stderr.puts "earth = #{percent_earth}, walls = #{percent_walls} " 
 $stderr.puts "empty = #{percent_empty}" 
 map = Array.new(length) { Array.new(width) {" "}}
-if(total >= 100)
+if(total > 100)
   $stderr.puts "total percentage is #{total}, aborting"
   exit 0
 end
@@ -43,7 +43,7 @@ while my_success  < 1
   $stderr.puts "placing robot"
   randlength=rand(length)
   randwidth=rand(width)
-  if( map[randlength][randwidth].eql? " ")
+  if( map[randlength][randwidth].eql? " " and " ".eql? " ")
     $stderr.puts "loc #{randlength},#{randwidth} (#{map[randlength][randwidth]}) is GREAT!!!"
     map[randlength][randwidth].replace("R")
     my_success = my_success+1
@@ -63,16 +63,16 @@ map.each { |myrow|
      myrand=rand(1-100)
      $stderr.puts "cell #{x},#{y} myrand is #{myrand} "
      #$stderr.puts "myrand is #{myrand} "
-     if(myrand < percent_lambdas)
+     if(myrand <= percent_lambdas)
         $stderr.puts "making this a lambda"
         mycell.replace("/")
-     elsif(myrand < percent_rocks+percent_lambdas)
+     elsif(myrand <= percent_rocks+percent_lambdas)
         $stderr.puts "making this a rock"
         mycell.replace("*")
-     elsif(myrand < percent_rocks+percent_lambdas+percent_earth)
+     elsif(myrand <= percent_rocks+percent_lambdas+percent_earth)
         $stderr.puts "making this a earth"
         mycell.replace(".")
-     elsif(myrand < percent_rocks+percent_lambdas+percent_earth+percent_walls)
+     elsif(myrand <= percent_rocks+percent_lambdas+percent_earth+percent_walls)
         $stderr.puts "making this a wall"
         mycell.replace("X")
      else
@@ -89,3 +89,9 @@ map.each { |myrow|
   } 
   print "\n"
 }
+if(rand(1..2) == 1 )
+  puts
+  puts "Water #{rand(0..length)}"
+  puts "Flooding #{rand(1..10)}"
+  puts "Waterproof #{rand(0..15)}"
+end
