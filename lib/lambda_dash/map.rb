@@ -8,7 +8,6 @@ module LambdaDash
       end
 
       attr_reader :x, :y
-      attr_writer :ascii
 
       def wall?
         @ascii == "#"
@@ -77,6 +76,11 @@ module LambdaDash
       @water_level = @metadata[:water]
     end
 
+    def initialize_copy(_)
+      super
+      @cells = @cells.map { |row| row.dup }
+    end
+
     attr_reader :metadata, :water_level
 
     include Enumerable
@@ -98,7 +102,7 @@ module LambdaDash
     end
 
     def []=(x, y, ascii)
-      self[x, y].ascii = ascii
+      @cells[m - y][x - 1] = Cell.new(ascii, x, y)
     end
 
     def each
@@ -129,6 +133,7 @@ module LambdaDash
       @water_level += robot.move_count / @metadata[:flooding] \
         if @metadata[:flooding].nonzero?
       robot.check_water_level(@water_level, @metadata[:waterproof])
+      robot.clear_score
     end
 
     def to_s
