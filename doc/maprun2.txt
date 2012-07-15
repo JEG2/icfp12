@@ -1,0 +1,97 @@
+
+ time:  4.65s
+score:  739
+moves:  DLLLLLLLLLL
+../data/basic_boulder.map
+
+ time:  0.04s
+score:  665
+moves:  LLLLLLLLLL
+../data/basic_move.map
+
+ time:  6.40s
+score:  29
+moves:  LLLLLLLLLLLLLLLDDLDLDA
+../data/basic_tumble_breakeven.map
+
+ time:  1.90s
+score:  212
+moves:  DLRDDLRULLLDL
+../data/contest1.map
+
+ time:  150.03s
+score:  791
+moves:  UUUUULLLLLLUUUUULLUULLLDRDUUUUUUURRRUDLLUUURRRDRRRRLLUURRRRA
+../data/contest10.map
+
+ time:  150.01s
+score:  280
+moves:  RRUDRRULUURWLLLDDLDL
+../data/contest2.map
+
+ time:  150.01s
+score:  273
+moves:  RDDDLLRRRRDDLLLLLDRRURURURR
+../data/contest3.map
+
+ time:  150.00s
+score:  561
+moves:  DRDDRRDRRLUURUUULURDDDLLLUULLRDDRRRRUUR
+../data/contest4.map
+
+ time:  150.03s
+score:  728
+moves:  LLUUURUURRRRRRLUULLLLLA
+../data/contest5.map
+
+ time:  150.05s
+score:  741
+moves:  RUULRRRRRRRRRRUUURUURUUULULLULLLLLLLLLDRDLDDDDDDUURUURRRRRUA
+../data/contest6.map
+
+ time:  150.01s
+score:  867
+moves:  RDRRRDDLLLDDLLRRURURRDRDRRRLLULLL
+../data/contest7.map
+
+ time:  150.04s
+score:  618
+moves:  RRRRRURWLUURRLUURUUUULLULLLLLLUUA
+../data/contest8.map
+
+
+ time:  150.02s
+score:  1804
+moves:  UURRRDULLLDDLRRRRRRRRURUURRRRLDDDRRRRRRRUURDDRRRUULLLLLLRDDLLULULLULULLRUUUULLLLLLURRUURUURRRURRA
+../data/contest9.map
+
+ time:  150.00s
+score:  379
+moves:  UUURUUUULLLLLLRRRRRRRA
+../data/dropme.map
+
+ time:  150.01s
+score:  337
+moves:  RRRRDDLLLLLLLA
+../data/flood1.map
+
+ time:  150.00s
+score:  280
+moves:  RRUDRRULUURWLLLDLDDL
+../data/flood2.map
+
+ time:  150.03s
+score:  728
+moves:  LLUUURUURRRRRRLUULLLLLA
+../data/flood3.map
+
+ time:  150.05s
+score:  181
+moves:  DDDDLRDRRRDUUUUUUUUA
+../data/flood4.map
+
+ time:  150.01s
+score:  365
+moves:  DRDDRRDLLUUULUURDDRRRRUULURDDDLDDDRA
+../data/flood5.map
+Total 10578

@@ -38,6 +38,6 @@ loop do
 end
 
 puts
-puts " time:  %2ds" % elapsed
+puts " time:  %.2fs" % elapsed
 puts "score:  #{robot.score}"
 puts "moves:  #{robot.moves}"

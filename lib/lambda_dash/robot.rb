@@ -10,7 +10,14 @@ module LambdaDash
       @lambdas_collected = 0
       @moves             = ""
       @turns_underwater  = 0
+      @score             = nil
       locate_self
+    end
+
+    def initialize_copy(_)
+      super
+      @map   = @map.dup
+      @moves = @moves.dup
     end
 
     attr_reader :map, :x, :y, :lambdas_collected, :moves, :turns_underwater
@@ -26,10 +33,16 @@ module LambdaDash
         end
         @moves << move
       end
+      clear_score
+      map.clear_hash_key
     end
 
     def die
       @dead = true
+    end
+
+    def aborted?
+      @aborted
     end
 
     def game_over?
@@ -45,14 +58,19 @@ module LambdaDash
       end
     end
 
+    def clear_score
+      @score = nil
+    end
+
     def score
-      score = 25 * @lambdas_collected - move_count
+      return @score if @score
+      @score = 25 * @lambdas_collected - move_count
       if @aborted
-        score + 25 * @lambdas_collected
+        @score += 25 * @lambdas_collected
       elsif @on_lift
-        score + 50 * @lambdas_collected
+        @score += 50 * @lambdas_collected
       else
-        score
+        @score
       end
     end
 
@@ -112,6 +130,7 @@ module LambdaDash
         elsif not map[to_x, to_y].rock?
           if map[to_x, to_y].lambda?
             @lambdas_collected += 1
+            map.lambdas.delete_if { |l| l.x == to_x && l.y == to_y }
           elsif map[to_x, to_y].open_lift?
             @on_lift = true
           end
