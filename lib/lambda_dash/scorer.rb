@@ -10,6 +10,10 @@ module LambdaDash
   class Scorer
     MAX_LAMBDA_SCORE       = 75
     LAMBDA_COLLECTED_SCORE = 50
+
+    def self.manhattan_distance(x1, y1, x2, y2)
+      (x1 - x2).abs + (y1 - y2).abs
+    end
     
     def initialize(map, robot)
       @map   = map
@@ -107,7 +111,7 @@ module LambdaDash
     end
     
     def exit_distance
-      lift = @map.find { |cell| cell.lift? }
+      lift = @map.lifts.first
       (lift.x - @robot.x).abs + (lift.y - @robot.y).abs
     end
     
