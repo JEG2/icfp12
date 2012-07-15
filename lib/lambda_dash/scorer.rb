@@ -8,9 +8,11 @@
 
 module LambdaDash
   class Scorer
+
     MAX_LAMBDA_SCORE       = 75
     LAMBDA_COLLECTED_SCORE = 50
-
+    LAMBDA_ABORTED_SCORE   = 25
+    
     def self.manhattan_distance(x1, y1, x2, y2)
       (x1 - x2).abs + (y1 - y2).abs
     end
@@ -27,14 +29,89 @@ module LambdaDash
     
         
     # current score
+
+    # heat map -
+    # create a array of arrays (or map)
+    # figure out how to efficently sum the score.
     
-    # abondon right now score
+    # Seed the heat map as follows:
+    # Lambda cell set decramentor to 25
+    # Set origin cell to decramentor value 25
+    # Cell goes "dirty"
+
+    #   Algorithm
+    #   Decrament by 1
+    #   Check cells around if clear (Dirt, Lambda, Empty) and "clean"
+    #   Those cells set to decrament value (2nd step 24)
+    #   Cells goes "dirty"
+
+    # Knowledge of the cells that just got the 24 value now need to "grow
+    # the heat" find and mark valid neighbors with a 23 and "dirty".
     
-    # potential total score (collecting all lambda's and exiting the lift)
-    # Assume every lambda on the board take robots current score
-    # add all lambda's left on the board at the 25 rate then
-    # assume he hits the gate 
+    # Rinse wash and repeat until all the squares in the map have been
+    # marked dirty, or the decrmentor has reached zero.
     
+    # Reset the cells dirty values to clean.
+    
+    # Back to the top and generate the heat from the next lambda on the map.
+    
+    # def heat_map
+    #   heat_map = Array.new(@map.m) { Array.new(@map.n) { [0, "clean"] } }  
+    #        # .each_slice(@map.n).to_a
+    #   # heat_map[1][0]
+    #   # p heat_map 
+    # 
+    #   remaining_lambdas.each do |cell|
+    #     # p cell.x
+    #     # p cell.y
+    #     cell_stack = [heat_map[cell.x][cell.y]]
+    #             
+    #     cell_stack[0][0] = 25
+    #     cell_stack[0][1].replace("dirty")
+    # 
+    #     cell_stack.each do |cell_prime|
+    #       get_neighbors(cell, heat_map, cell_prime)
+    #       # if ( heat_map[cell[0]+1][cell[1]].exist? ) and
+    #       #                        ( heat_map[cell[0]+1][cell[1]].earth? or              
+    #       #                           heat_map[cell[0]+1][cell[1]].empty? or                                    
+    #       #                           heat_map[cell[0]+1][cell[1]].lambda? )
+    #       #  p "cell passed some test\n"
+    #       #  current_cell = heat_map [cell.x+1][cell.y]                        
+    #       #  cell_stack << current_cell
+    #       #  p current_cell[0] += cell[0] - 1
+    #       #  p current_cell[1].replace("dirty")
+    #       #         
+    #       # end
+    #     end
+    #   end
+    #   p heat_map
+    # end
+    # 
+    # def get_neighbors (cell, heat_map, cell_prime)
+    #   puts "I'm am here! #{cell.x}, #{cell.y}"
+    #   puts "My neighbor up is   : #{cell.x}, #{cell.y + 1}"
+    #   puts "My neighbor right is: #{cell.x + 1}, #{cell.y}"
+    #   puts "My neighbor down  is: #{cell.x}, #{cell.y - 1}"
+    #   puts "My neighbor left is : #{cell.x - 1}, #{cell.y}"
+    #   
+    #   if not @map[cell.x,cell.y+1].impassable?
+    #           cell_stack << [heat_map[cell.x][cell.y+1]]
+    #   end
+    #   
+    #   #if not [@map[cell.x+1][cell.y]].impassable?
+    #   #        cell_stack << [heat_map[cell.x][cell.y+1]]
+    #   #end
+    #   
+    #   # cell_stack << if not [heat_map[cell.x+1][cell.y]].impassable?
+    #   #       cell_stack << if not [heat_map[cell.x][cell.y-1]].impassable?
+    #   #       cell_stack << if not [heat_map[cell.x-1][cell.y]].impassable?
+    #   puts "cell_stack is #{cell_stack}"
+    # end
+    
+    def score_abandon_now
+      @robot.score + @robot.lambdas_collected * LAMBDA_ABORTED_SCORE
+    end
+       
     # Adding the robots current score add all the Lambda's at 25
     # add his lambda's collect plus the number left on the board times 50
     
