@@ -57,15 +57,14 @@ module LambdaDash
     def pruned_search
       best  = robot.dup
       queue = [best]
-      @seen = {best.map.to_s => best.score}
+      @seen = {best.map.hash_key => best.score}
       while not time_up? and (current = queue.shift)
         added_moves = false
         current.legal_moves.each do |move|
           new_move = current.dup
           new_move.move(move)
           new_move.map.update(new_move) unless new_move.game_over?
-          map_str = new_move.map.to_s
-          unless prune?(best, new_move, map_str, new_move.score)
+          unless prune?(best, new_move)
             if new_move.score > best.score
               best = new_move
             end
@@ -86,10 +85,11 @@ module LambdaDash
       @time_up
     end
 
-    def prune?(best, robot, map_str, score)
+    def prune?(best, robot)
       if Scorer.new(robot.map, robot).james_algorithm >= best.score and
-         (not @seen.include?(map_str) or score > @seen[map_str])
-        @seen[map_str] = score unless robot.aborted?
+         ( not @seen.include?(robot.map.hash_key)                   or
+           robot.score > @seen[robot.map.hash_key] )
+        @seen[robot.map.hash_key] = robot.score unless robot.aborted?
         false
       else
         true

@@ -120,7 +120,7 @@ module LambdaDash
       mx  = x - 1
       my  = m - y
       old = @cells[my][mx]
-      if old.rock? # and (ascii == " " or ascii == "*" or ascii == "R")
+      if old.rock?
         @rocks.delete(old)
       end
       @cells[my][mx] = Cell.new(ascii, x, y)
@@ -159,6 +159,15 @@ module LambdaDash
         if @metadata[:flooding].nonzero?
       robot.check_water_level(@water_level, @metadata[:waterproof])
       robot.clear_score
+      clear_hash_key
+    end
+
+    def clear_hash_key
+      @hash_key = nil
+    end
+
+    def hash_key
+      @hash_key ||= @cells.join
     end
 
     def to_s

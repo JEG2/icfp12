@@ -34,6 +34,7 @@ module LambdaDash
         @moves << move
       end
       clear_score
+      map.clear_hash_key
     end
 
     def die
