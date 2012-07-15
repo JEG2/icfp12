@@ -90,14 +90,18 @@ module LambdaDash
       end
     end
 
-    def initialize(map_name_or_cells)
+    def initialize(map_name_or_io_or_cells)
       @metadata = { water: 0, flooding: 0, waterproof: 10,
                     trampolines: { },
                     growth: 25, razors: 0 }
-      if map_name_or_cells.is_a? Array
-        build_map(map_name_or_cells)
+      if map_name_or_io_or_cells.is_a? Array
+        build_map(map_name_or_io_or_cells)
       else
-        load_map(map_name_or_cells)
+        if map_name_or_io_or_cells.respond_to? :readlines
+          load_map(map_name_or_io_or_cells)
+        else
+          open(self.class.path(map_name_or_io_or_cells)) { |io| load_map(io) }
+        end
       end
       @water_level   = @metadata[:water]
       @total_lambdas = 0
@@ -195,11 +199,15 @@ module LambdaDash
       end
     end
 
-    def neighbors(x, y)
+    def neighbors(x, y, include_diagonals = true)
       neighbors = [ ]
-      [ [-1, +1], [+0, +1], [+1, +1],
-        [-1, +0],           [+1, +0],
-        [-1, -1], [+0, -1], [+1, -1] ].each do |x_offset, y_offset|
+      offsets   = [           [+0, +1],
+                    [-1, +0],           [+1, +0],
+                              [+0, -1]           ]
+      offsets.push( [-1, +1],           [+1, +1],
+
+                    [-1, -1],           [+1, -1] ) if include_diagonals
+      offsets.each do |x_offset, y_offset|
         neighbor_x, neighbor_y = x + x_offset, y + y_offset
         if neighbor_x.between?(1, n) and neighbor_y.between?(1, m)
           neighbors << self[neighbor_x, neighbor_y]
@@ -266,8 +274,8 @@ module LambdaDash
       }
     end
 
-    def load_map(name)
-      lines = File.readlines(self.class.path(name)).map(&:chomp)
+    def load_map(io)
+      lines = io.readlines.map(&:chomp)
       while lines.last =~ / \A (?: Trampoline\s+([A-I])\s+targets\s+([1-9]) |
                                    (\w+)\s+(\d+) ) \Z /x
         if $1
