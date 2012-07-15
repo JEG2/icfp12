@@ -1,0 +1,97 @@
+
+ time:  5.26s
+score:  739
+moves:  DLLLLLLLLLL
+../data/basic_boulder.map
+
+ time:  0.04s
+score:  665
+moves:  LLLLLLLLLL
+../data/basic_move.map
+
+ time:  6.38s
+score:  29
+moves:  DDDDLLLLLLLLLLLLLLLLLA
+../data/basic_tumble_breakeven.map
+
+ time:  2.09s
+score:  212
+moves:  LDRDDLRULLLDL
+../data/contest1.map
+
+ time:  150.14s
+score:  614
+moves:  UUUUULLLLLLUUUUULLUULLLRUUDDDDULLDRDA
+../data/contest10.map
+
+ time:  150.00s
+score:  280
+moves:  RRUDRRULUURWLLLDLDDL
+../data/contest2.map
+
+ time:  150.02s
+score:  275
+moves:  LDDDRRRRDDLLLLLDURRRRUURR
+../data/contest3.map
+
+ time:  150.01s
+score:  561
+moves:  DDRDRDRRRLUURUUULUDRDDLLLLUULRDRDRRRUUR
+../data/contest4.map
+
+ time:  150.02s
+score:  814
+moves:  LLUURUUURRRRRUULLLLLRRRRDRDRDDRDDDLLA
+../data/contest5.map
+
+ time:  150.07s
+score:  741
+moves:  RUULRRRRRRRRRRUUURUURUUULULLULLLLLLLLLDRDLDDDDDDUUUURRRRRRUA
+../data/contest6.map
+
+ time:  150.01s
+score:  869
+moves:  RDRRRDRDDDRRRLULULLLLLDDLLRURRR
+../data/contest7.map
+
+ time:  150.18s
+score:  240
+moves:  UULLLDLLLLA
+../data/contest8.map
+
+ time:  150.05s
+score:  1196
+moves:  LURURRRDULLLDDRRRRRRRRURUURRRLDDDRRRRRRRURDRRRUULLLLLLA
+../data/contest9.map
+
+ time:  0.07s
+score:  0
+moves:  
+../data/dropme.map
+
+ time:  150.01s
+score:  337
+moves:  RRRRDDLLLLLLLA
+../data/flood1.map
+
+ time:  150.01s
+score:  280
+moves:  RRUDRRULUURWLLLDLDDL
+../data/flood2.map
+
+ time:  150.28s
+score:  728
+moves:  LLUURUUURRRRRRLUULLLLLA
+../data/flood3.map
+
+ time:  150.03s
+score:  95
+moves:  DDDDLA
+../data/flood4.map
+
+ time:  150.01s
+score:  371
+moves:  URDDLRDRDDRUURURUULUDRDDLDDDRA
+../data/flood5.map
+
+Total 9046		
