@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+$VERBOSE = true
+
+require_relative "../lib/lambda_dash"
+
+map    = LambdaDash::Map.new(ARGF)
+robot  = LambdaDash::Robot.new(map)
+search = LambdaDash::Search.new(robot)
+
+trap(:INT) do
+  search.time_up = true
+end
+print search.pruned_search
