@@ -4,23 +4,52 @@ score:  665
 moves:  LLLLLLLLLL
 ../data/basic_move.map
 
- time:  0.58s
+ time:  0.55s
 score:  739
 moves:  DLLLLLLLLLL
 ../data/basic_boulder.map
 
- time:  0.36s
+ time:  0.28s
 score:  212
 moves:  DLRDDLRULLLDL
 ../data/contest1.map
 
- time:  0.92s
+ time:  0.88s
 score:  29
 moves:  LLLLLLLLLLLLLLLDDLDLDA
 ../data/basic_tumble_breakeven.map
-../data/flood5.map
 
- time:  68.35s
+ time:  3.83s
+score:  270
+moves:  UURURLLDDDRRUDRRULUURWLDLLDLDL
+
+ time:  3.82s
+score:  791
+moves:  UUUUULLLLLLUUUUULLUULLLDRDUUUUUUURRRUDLLUUURRRDRRRRLLUURRRRA
+../data/contest2.map
+../data/contest10.map
+
+ time:  0.01s
+score:  665
+moves:  LLLLLLLLLL
+../data/basic_move.map
+
+ time:  0.55s
+score:  739
+moves:  DLLLLLLLLLL
+../data/basic_boulder.map
+
+ time:  0.29s
+score:  212
+moves:  DLRDDLRULLLDL
+../data/contest1.map
+
+ time:  0.85s
+score:  29
+moves:  LLLLLLLLLLLLLLLDDLDLDA
+../data/basic_tumble_breakeven.map
+
+ time:  63.82s
 score:  281
 moves:  RRUDRRULURULLLDDLDL
 ../data/contest2.map
@@ -33,44 +62,44 @@ moves:  UUUUULLLLLLUUUUULLUULLLDRDUUUUUUURRRUDLLUUURRRDRRRRLLUURRRRA
  time:  150.00s
 score:  273
 moves:  RDDDLLRRRRDDLLLLLDRRURURURR
-
- time:  150.00s
-score:  561
-moves:  DRDDRRDRRLUURUUULURDDDLLLUULLRDDRRRRUUR
 ../data/contest3.map
-../data/contest4.map
 
  time:  150.01s
+score:  561
+moves:  DRDDRRDRRLUURUUULURDDDLLLUULLRDDRRRRUUR
+../data/contest4.map
+
+ time:  150.00s
 score:  728
 moves:  LLUUURUURRRRRRLUULLLLLA
+../data/contest5.map
 
  time:  150.01s
 score:  741
 moves:  RUULRRRRRRRRRRUUURUURUUULULLULLLLLLLLLDRDLDDDDDDUURUURRRRRUA
-../data/contest5.map
 ../data/contest6.map
 
- time:  150.01s
+ time:  150.00s
 score:  869
 moves:  RDRRRDDRDDRRRLLUULLLLDLDLLRRURR
+../data/contest7.map
 
- time:  150.01s
+ time:  150.06s
 score:  1039
 moves:  RRRRRURWLUURRLUURUUUULLULLLLLLUULUULULLLLLLRRDDDDDDLDLRRDDDLLA
-../data/contest7.map
 ../data/contest8.map
-
- time:  150.01s
-score:  384
-moves:  UUURUUUURLLLLLLLA
-../data/dropme.map
 
  time:  150.01s
 score:  1892
 moves:  UURRRDULLLDDLRRRRRRRRURUURRRRLDDDRRRRRRRUURDDRRRUULLLLLLRDDLLULULLULULLRUUUULLLLLLURRUURUURRRURRDRDDRRRRRRDRA
 ../data/contest9.map
 
- time:  32.09s
+ time:  150.01s
+score:  384
+moves:  UUURUUUURLLLLLLLA
+../data/dropme.map
+
+ time:  33.42s
 score:  281
 moves:  RRUDRRULURULLLDLDDL
 ../data/flood2.map
@@ -83,9 +112,13 @@ moves:  RRRRDDLLLLLLLA
  time:  150.01s
 score:  728
 moves:  LLUUURUURRRRRRLUULLLLLA
+../data/flood3.map
 
  time:  150.01s
 score:  411
 moves:  DDDDLRDRRRDUUUUUUUULULLLLLLUULLLLLLUURRA
-../data/flood3.map
 ../data/flood4.map
+
+ time:  150.00s
+score:  325
+moves:  DRDDRRDUUURRUULURDDDLDDDRA
