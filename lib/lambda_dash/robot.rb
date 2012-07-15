@@ -10,6 +10,7 @@ module LambdaDash
       @lambdas_collected = 0
       @moves             = ""
       @turns_underwater  = 0
+      @razors            = map.metadata[:razors]
       @score             = nil
       locate_self
     end
@@ -20,7 +21,8 @@ module LambdaDash
       @moves = @moves.dup
     end
 
-    attr_reader :map, :x, :y, :lambdas_collected, :moves, :turns_underwater
+    attr_reader :map, :x, :y, :moves,
+                :lambdas_collected, :turns_underwater, :razors
 
     def move(ascii)
       ascii.chars.each do |move|
@@ -30,6 +32,7 @@ module LambdaDash
         when "L" then try_move(x - 1, y,     x - 2)
         when "R" then try_move(x + 1, y,     x + 2)
         when "A" then abort
+        when "S" then slash_beards
         end
         @moves << move
       end
@@ -97,6 +100,7 @@ module LambdaDash
                       ( x > 2                           and
                         map[x - 1, y].rock?             and
                         map[x - 2, y].empty? )
+      moves << "S" if @razors > 0 and map.neighbors(x, y).any?(&:beard?)
       moves
     end
 
@@ -138,9 +142,11 @@ module LambdaDash
         elsif not map[to_x, to_y].rock?
           if map[to_x, to_y].lambda?
             @lambdas_collected += 1
-            map.lambdas.delete_if { |l| l.x == to_x && l.y == to_y }
+            map.lambdas.delete(map[to_x, to_y])
           elsif map[to_x, to_y].open_lift?
             @on_lift = true
+          elsif map[to_x, to_y].razor?
+            @razors += 1
           end
           move_to(to_x, to_y)
         end
@@ -149,6 +155,15 @@ module LambdaDash
 
     def abort
       @aborted = true
+    end
+
+    def slash_beards
+      if @razors > 0
+        map.neighbors(x, y).each do |neighbor|
+          map[neighbor.x, neighbor.y] = " " if neighbor.beard?
+        end
+        @razors -= 1
+      end
     end
   end
 end

@@ -46,7 +46,7 @@ module LambdaDash
       end
 
       def impassable?
-        wall? or closed_lift? or target?
+        wall? or closed_lift? or target? or beard?
       end
 
       def trampoline?
@@ -55,6 +55,14 @@ module LambdaDash
 
       def target?
         @ascii =~ /\A[1-9]\z/
+      end
+
+      def beard?
+        @ascii == "W"
+      end
+
+      def razor?
+        @ascii == "!"
       end
 
       def to_s
@@ -75,7 +83,9 @@ module LambdaDash
     end
 
     def initialize(map_name_or_cells)
-      @metadata = {water: 0, flooding: 0, waterproof: 10, trampolines: { }}
+      @metadata = { water: 0, flooding: 0, waterproof: 10,
+                    trampolines: { },
+                    growth: 25, razors: 0 }
       if map_name_or_cells.is_a? Array
         build_map(map_name_or_cells)
       else
@@ -85,6 +95,7 @@ module LambdaDash
       @lambdas     = [ ]
       @lifts       = [ ]
       @rocks       = [ ]
+      @beards      = [ ]
       trampolines  = { }
       targets      = { }
       each do |cell|
@@ -94,6 +105,8 @@ module LambdaDash
           @lifts << cell
         elsif cell.rock?
           @rocks << cell
+        elsif cell.beard?
+          @beards << cell
         elsif cell.trampoline?
           trampolines[cell.to_s] = cell
         elsif cell.target?
@@ -111,9 +124,11 @@ module LambdaDash
       @lambdas = @lambdas.dup
       @lifts   = @lifts.dup
       @rocks   = @rocks.dup
+      @beards  = @beards.dup
     end
 
-    attr_reader :metadata, :water_level, :lambdas, :lifts, :rocks, :trampolines
+    attr_reader :metadata, :water_level,
+                :lambdas, :lifts, :rocks, :trampolines, :beards
 
     include Enumerable
 
@@ -140,10 +155,17 @@ module LambdaDash
       if old.rock?
         @rocks.delete(old)
       end
+      if old.beard?
+        @beards.delete(old)
+      end
       @cells[my][mx] = Cell.new(ascii, x, y)
       if ascii == "*"
         @rocks << @cells[my][mx]
         @rocks.sort_by! { |cell| [cell.x, cell.y] }
+      end
+      if ascii == "W"
+        @beards << @cells[my][mx]
+        @beards.sort_by! { |cell| [cell.x, cell.y] }
       end
     end
 
@@ -155,9 +177,29 @@ module LambdaDash
       end
     end
 
+    def neighbors(x, y)
+      neighbors = [ ]
+      [ [-1, +1], [+0, +1], [+1, +1],
+        [-1, +0],           [+1, +0],
+        [-1, -1], [+0, -1], [+1, -1] ].each do |x_offset, y_offset|
+        neighbor_x, neighbor_y = x + x_offset, y + y_offset
+        if neighbor_x.between?(1, n) and neighbor_y.between?(1, m)
+          neighbors << self[neighbor_x, neighbor_y]
+        end
+      end
+      neighbors
+    end
+
     def update(robot)
       updates = [ ]
-      @rocks.each do |cell|
+      cells_to_update = @rocks
+      if not @beards.empty?          and
+         @metadata[:growth].nonzero? and
+         robot.move_count % @metadata[:growth] == 0
+        cells_to_update += @beards
+        cells_to_update.sort_by! { |cell| [cell.y, cell.x] }
+      end
+      cells_to_update.each do |cell|
         update_cell(cell, updates)
       end
       if @lambdas.empty?
@@ -214,7 +256,7 @@ module LambdaDash
           @metadata[:trampolines][$1] = $2
           lines.pop
         else
-          @metadata[$1.downcase.to_sym] = $2.to_i
+          @metadata[$3.downcase.to_sym] = $4.to_i
           lines.pop
         end
       end
@@ -227,7 +269,7 @@ module LambdaDash
 
     def update_cell(cell, updates)
       x, y = cell.x, cell.y
-      if y > 1
+      if cell.rock? and y > 1
         if self[x, y - 1].empty?
           updates.push([x, y, " "], [x, y - 1, "*"])
         elsif self[x, y - 1].rock?
@@ -241,6 +283,10 @@ module LambdaDash
               self[x + 1, y].empty?  and
               self[x + 1, y - 1].empty?
           updates.push([x, y, " "], [x + 1, y - 1, "*"])
+        end
+      elsif cell.beard?
+        neighbors(x, y).each do |neighbor|
+          updates.push([neighbor.x, neighbor.y, "W"]) if neighbor.empty?
         end
       end
     end
