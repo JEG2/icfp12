@@ -118,8 +118,8 @@ module LambdaDash
     # Current score plus lambda's collected
     
     def james_algorithm
-      @robot.lambdas_collected * LAMBDA_COLLECTED_SCORE +
-      @lambda_locations.size   * MAX_LAMBDA_SCORE       +
+      @robot.lambdas_collected                     * LAMBDA_COLLECTED_SCORE +
+      (@lambda_locations.size + @map.horocks.size) * MAX_LAMBDA_SCORE       +
       @robot.score
     end
     

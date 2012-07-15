@@ -86,19 +86,19 @@ module LambdaDash
       moves  = %w[W A]
       moves << "U" if y < map.m                     and
                       not map[x, y + 1].impassable? and
-                      not map[x, y + 1].rock?
+                      not map[x, y + 1].rocky?
       moves << "D" if y > 1                         and
                       not map[x, y - 1].impassable? and
-                      not map[x, y - 1].rock?
+                      not map[x, y - 1].rocky?
       moves << "R" if ( x < map.n                       and
                         not map[x + 1, y].impassable? ) or
                       ( x < map.n - 1                   and
-                        map[x + 1, y].rock?             and
+                        map[x + 1, y].rocky?            and
                         map[x + 2, y].empty? )
       moves << "L" if ( x > 1                           and
                         not map[x - 1, y].impassable? ) or
                       ( x > 2                           and
-                        map[x - 1, y].rock?             and
+                        map[x - 1, y].rocky?            and
                         map[x - 2, y].empty? )
       moves << "S" if @razors > 0 and map.neighbors(x, y).any?(&:beard?)
       moves
@@ -134,12 +134,12 @@ module LambdaDash
               map[trampoline.x, trampoline.y] = " "
             end
           end
-        elsif map[to_x, to_y].rock? and
+        elsif map[to_x, to_y].rocky? and
            rock_pushed.to_i > 0  and
            map[rock_pushed, to_y].empty?
-          map[rock_pushed, to_y] = "*"
+          map[rock_pushed, to_y] = map[to_x, to_y].to_s
           move_to(to_x, to_y)
-        elsif not map[to_x, to_y].rock?
+        elsif not map[to_x, to_y].rocky?
           if map[to_x, to_y].lambda?
             @lambdas_collected += 1
             map.lambdas.delete(map[to_x, to_y])

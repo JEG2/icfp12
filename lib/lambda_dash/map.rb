@@ -41,6 +41,14 @@ module LambdaDash
         @ascii == "*"
       end
 
+      def horock?
+        @ascii == "@"
+      end
+
+      def rocky?
+        rock? or horock?
+      end
+
       def empty?
         @ascii == " "
       end
@@ -91,20 +99,27 @@ module LambdaDash
       else
         load_map(map_name_or_cells)
       end
-      @water_level = @metadata[:water]
-      @lambdas     = [ ]
-      @lifts       = [ ]
-      @rocks       = [ ]
-      @beards      = [ ]
-      trampolines  = { }
-      targets      = { }
+      @water_level   = @metadata[:water]
+      @total_lambdas = 0
+      @lambdas       = [ ]
+      @lifts         = [ ]
+      @rockys        = [ ]
+      @horocks       = [ ]
+      @beards        = [ ]
+      trampolines    = { }
+      targets        = { }
       each do |cell|
         if cell.lambda?
-          @lambdas << cell
+          @lambdas       << cell
+          @total_lambdas += 1
         elsif cell.lift?
           @lifts << cell
-        elsif cell.rock?
-          @rocks << cell
+        elsif cell.rocky?
+          @rockys  << cell
+          if cell.horock?
+            @horocks       << cell
+            @total_lambdas += 1
+          end
         elsif cell.beard?
           @beards << cell
         elsif cell.trampoline?
@@ -123,12 +138,13 @@ module LambdaDash
       @cells   = @cells.map { |row| row.dup }
       @lambdas = @lambdas.dup
       @lifts   = @lifts.dup
-      @rocks   = @rocks.dup
+      @rockys  = @rockys.dup
+      @horocks = @horocks.dup
       @beards  = @beards.dup
     end
 
-    attr_reader :metadata, :water_level,
-                :lambdas, :lifts, :rocks, :trampolines, :beards
+    attr_reader :metadata, :water_level, :total_lambdas,
+                :lambdas, :lifts, :rockys, :horocks, :trampolines, :beards
 
     include Enumerable
 
@@ -152,20 +168,22 @@ module LambdaDash
       mx  = x - 1
       my  = m - y
       old = @cells[my][mx]
-      if old.rock?
-        @rocks.delete(old)
-      end
-      if old.beard?
+      if old.rocky?
+        @rockys.delete(old)
+        @horocks.delete(old) if old.horock?
+      elsif old.beard?
         @beards.delete(old)
       end
       @cells[my][mx] = Cell.new(ascii, x, y)
-      if ascii == "*"
-        @rocks << @cells[my][mx]
-        @rocks.sort_by! { |cell| [cell.x, cell.y] }
-      end
-      if ascii == "W"
+      if ascii == "*" or ascii == "@"
+        @rockys << @cells[my][mx]
+        @rockys.sort_by! { |cell| [cell.x, cell.y] }
+        @horocks << @cells[my][mx] if ascii == "@"
+      elsif ascii == "W"
         @beards << @cells[my][mx]
         @beards.sort_by! { |cell| [cell.x, cell.y] }
+      elsif ascii == "\\"
+        @lambdas << @cells[my][mx]
       end
     end
 
@@ -192,7 +210,7 @@ module LambdaDash
 
     def update(robot)
       updates = [ ]
-      cells_to_update = @rocks
+      cells_to_update = @rockys
       if not @beards.empty?          and
          @metadata[:growth].nonzero? and
          robot.move_count % @metadata[:growth] == 0
@@ -202,7 +220,7 @@ module LambdaDash
       cells_to_update.each do |cell|
         update_cell(cell, updates)
       end
-      if @lambdas.empty?
+      if robot.lambdas_collected == @total_lambdas
         @lifts.each do |lift|
           self[lift.x, lift.y] = "O"
         end
@@ -269,25 +287,34 @@ module LambdaDash
 
     def update_cell(cell, updates)
       x, y = cell.x, cell.y
-      if cell.rock? and y > 1
+      if cell.rocky? and y > 1
         if self[x, y - 1].empty?
-          updates.push([x, y, " "], [x, y - 1, "*"])
-        elsif self[x, y - 1].rock?
+          updates.push([x, y, " "], crack_rock(cell, x, y - 1))
+        elsif self[x, y - 1].rocky?
           if x < n and self[x + 1, y].empty? and self[x + 1, y - 1].empty?
-            updates.push([x, y, " "], [x + 1, y - 1, "*"])
+            updates.push([x, y, " "], crack_rock(cell, x + 1, y - 1))
           elsif x > 1 and self[x - 1, y].empty? and self[x - 1, y - 1].empty?
-            updates.push([x, y, " "], [x - 1, y - 1, "*"])
+            updates.push([x, y, " "], crack_rock(cell, x - 1, y - 1))
           end
         elsif self[x, y - 1].lambda? and
               x < n                  and
               self[x + 1, y].empty?  and
               self[x + 1, y - 1].empty?
-          updates.push([x, y, " "], [x + 1, y - 1, "*"])
+          updates.push([x, y, " "], crack_rock(cell, x + 1, y - 1))
         end
       elsif cell.beard?
         neighbors(x, y).each do |neighbor|
           updates.push([neighbor.x, neighbor.y, "W"]) if neighbor.empty?
         end
+      end
+    end
+
+    def crack_rock(rock, to_x, to_y)
+      return [to_x, to_y, "*"] unless rock.horock?
+      if to_y > 1 and not self[to_x, to_y - 1].empty?
+        [to_x, to_y, "\\"]
+      else
+        [to_x, to_y, "@"]
       end
     end
   end
