@@ -41,6 +41,6 @@ do
 
 	while [ $NUM -ge 2 ]; do
 		checkqueue
-		sleep 0.4
+		sleep 0.2
 	done
 done
