@@ -55,58 +55,48 @@ module LambdaDash
     
     # Back to the top and generate the heat from the next lambda on the map.
     
-    # def heat_map
-    #   heat_map = Array.new(@map.m) { Array.new(@map.n) { [0, "clean"] } }  
-    #        # .each_slice(@map.n).to_a
-    #   # heat_map[1][0]
-    #   # p heat_map 
-    # 
-    #   remaining_lambdas.each do |cell|
-    #     # p cell.x
-    #     # p cell.y
-    #     cell_stack = [heat_map[cell.x][cell.y]]
-    #             
-    #     cell_stack[0][0] = 25
-    #     cell_stack[0][1].replace("dirty")
-    # 
-    #     cell_stack.each do |cell_prime|
-    #       get_neighbors(cell, heat_map, cell_prime)
-    #       # if ( heat_map[cell[0]+1][cell[1]].exist? ) and
-    #       #                        ( heat_map[cell[0]+1][cell[1]].earth? or              
-    #       #                           heat_map[cell[0]+1][cell[1]].empty? or                                    
-    #       #                           heat_map[cell[0]+1][cell[1]].lambda? )
-    #       #  p "cell passed some test\n"
-    #       #  current_cell = heat_map [cell.x+1][cell.y]                        
-    #       #  cell_stack << current_cell
-    #       #  p current_cell[0] += cell[0] - 1
-    #       #  p current_cell[1].replace("dirty")
-    #       #         
-    #       # end
-    #     end
-    #   end
-    #   p heat_map
-    # end
-    # 
-    # def get_neighbors (cell, heat_map, cell_prime)
-    #   puts "I'm am here! #{cell.x}, #{cell.y}"
-    #   puts "My neighbor up is   : #{cell.x}, #{cell.y + 1}"
-    #   puts "My neighbor right is: #{cell.x + 1}, #{cell.y}"
-    #   puts "My neighbor down  is: #{cell.x}, #{cell.y - 1}"
-    #   puts "My neighbor left is : #{cell.x - 1}, #{cell.y}"
-    #   
-    #   if not @map[cell.x,cell.y+1].impassable?
-    #           cell_stack << [heat_map[cell.x][cell.y+1]]
-    #   end
-    #   
-    #   #if not [@map[cell.x+1][cell.y]].impassable?
-    #   #        cell_stack << [heat_map[cell.x][cell.y+1]]
-    #   #end
-    #   
-    #   # cell_stack << if not [heat_map[cell.x+1][cell.y]].impassable?
-    #   #       cell_stack << if not [heat_map[cell.x][cell.y-1]].impassable?
-    #   #       cell_stack << if not [heat_map[cell.x-1][cell.y]].impassable?
-    #   puts "cell_stack is #{cell_stack}"
-    # end
+     def heat_map
+       heat_map = Hash.new()  
+       stack=Hash.new()
+       remaining_lambdas.each do |cell|
+         #p "lambda is at #{cell.x},#{cell.y}"
+         score=25
+         stack["#{cell.x},#{cell.y}"]=score
+         neighbors=@map.neighbors(cell.x,cell.y,false).reject { |curcell|
+             curcell.impassable?
+         }
+         p "neighbors contains #{neighbors.count} entries, #{neighbors}"
+         score-=1
+         oldneighbors = Array.new(neighbors)
+         while ( score >=0 and oldneighbors.size>0) do
+           oldneighbors = Array.new(neighbors)
+           p "oldneighbors contains #{oldneighbors.count} entries"
+           neighbors.clear
+           #p "checking that neighbors is empty.  Contains #{neighbors.count} entries."
+           oldneighbors.each { |curcell|
+             #p "looking at #{curcell.x} #{curcell.y}"
+             unless stack["#{curcell.x},#{curcell.y}"] 
+              #p "adding  #{curcell.x} #{curcell.y}, #{score} to hash"
+              stack["#{curcell.x},#{curcell.y}"] = score
+             end
+             neighbors+=@map.neighbors(curcell.x,curcell.y,false).reject { |curcell2|
+               curcell2.impassable? or stack["#{curcell2.x},#{curcell2.y}"]
+               
+             }
+           } 
+           score-=1
+         end 
+         stack.each do |ccell,sscore|
+           if heat_map[ccell]
+             heat_map[ccell]+=sscore
+           else
+             heat_map[ccell]=sscore
+           end
+         end
+         stack.clear
+       end
+       p heat_map
+     end
     
     def score_abandon_now
       @robot.score + @robot.lambdas_collected * LAMBDA_ABORTED_SCORE
