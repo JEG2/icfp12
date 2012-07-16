@@ -31,8 +31,8 @@ task :prepare do
   %w[bin data lib spec].each do |dir|
     copy_all_to_src(dir)
   end
-  FileUtils.cp("README.md", SRC_DIR + "README")
-  FileUtils.cp("Rakefile",  SRC_DIR + "Rakefile")
+  FileUtils.cp("README.md", SUBMISSION_DIR + "README")
+  FileUtils.cp("Rakefile",  SRC_DIR        + "Rakefile")
 
   add_file("install", <<-END_BASH)
   #!/bin/bash
