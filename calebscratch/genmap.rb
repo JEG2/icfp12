@@ -65,19 +65,19 @@ map.each { |myrow|
      #$stderr.puts "cell #{x},#{y} myrand is #{myrand} "
      #$stderr.puts "myrand is #{myrand} "
      if(myrand <= percent_lambdas)
-        #$stderr.puts "making this a lambda"
-        mycell.replace("\")
+        # $stderr.puts "making this a lambda"
+        mycell.replace("\\")
      elsif(myrand <= percent_rocks+percent_lambdas)
-        #$stderr.puts "making this a rock"
+        # $stderr.puts "making this a rock"
         mycell.replace("*")
      elsif(myrand <= percent_rocks+percent_lambdas+percent_earth)
-        #$stderr.puts "making this a earth"
+        # $stderr.puts "making this a earth"
         mycell.replace(".")
      elsif(myrand <= percent_rocks+percent_lambdas+percent_earth+percent_walls)
-        #$stderr.puts "making this a wall"
+        # $stderr.puts "making this a wall"
         mycell.replace("#")
      else
-        #$stderr.puts "making this a empty"
+        # $stderr.puts "making this a empty"
      end
    end
   } 
