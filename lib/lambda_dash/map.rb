@@ -235,8 +235,9 @@ module LambdaDash
       end
       updates.each do |x, y, ascii|
         self[x, y] = ascii
-        if ascii == "*" and y > 1 and self[x, y - 1].robot?
+        if (ascii == "*" or ascii == "@") and y > 1 and self[x, y - 1].robot?
           robot.die
+          break
         end
       end
       @water_level  = @metadata[:water]
@@ -297,18 +298,18 @@ module LambdaDash
       x, y = cell.x, cell.y
       if cell.rocky? and y > 1
         if self[x, y - 1].empty?
-          updates.push([x, y, " "], crack_rock(cell, x, y - 1))
+          updates.push([x, y, " "], *crack_rock(cell, x, y - 1))
         elsif self[x, y - 1].rocky?
           if x < n and self[x + 1, y].empty? and self[x + 1, y - 1].empty?
-            updates.push([x, y, " "], crack_rock(cell, x + 1, y - 1))
+            updates.push([x, y, " "], *crack_rock(cell, x + 1, y - 1))
           elsif x > 1 and self[x - 1, y].empty? and self[x - 1, y - 1].empty?
-            updates.push([x, y, " "], crack_rock(cell, x - 1, y - 1))
+            updates.push([x, y, " "], *crack_rock(cell, x - 1, y - 1))
           end
         elsif self[x, y - 1].lambda? and
               x < n                  and
               self[x + 1, y].empty?  and
               self[x + 1, y - 1].empty?
-          updates.push([x, y, " "], crack_rock(cell, x + 1, y - 1))
+          updates.push([x, y, " "], *crack_rock(cell, x + 1, y - 1))
         end
       elsif cell.beard?
         neighbors(x, y).each do |neighbor|
@@ -318,11 +319,11 @@ module LambdaDash
     end
 
     def crack_rock(rock, to_x, to_y)
-      return [to_x, to_y, "*"] unless rock.horock?
+      return [[to_x, to_y, "*"]] unless rock.horock?
       if to_y > 1 and not self[to_x, to_y - 1].empty?
-        [to_x, to_y, "\\"]
+        [[to_x, to_y, "@"], [to_x, to_y, "\\"]]
       else
-        [to_x, to_y, "@"]
+        [[to_x, to_y, "@"]]
       end
     end
   end
