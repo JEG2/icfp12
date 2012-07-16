@@ -46,7 +46,8 @@ task :prepare do
   ruby1.9.1
   END_BASH
 
-  system("tar -czf #{SUBMISSION_DIR}.tgz #{SUBMISSION_DIR}")
+  system("cd #{SUBMISSION_DIR} && ln -s src/data maps")
+  system("cd #{SUBMISSION_DIR} && tar -czf ../#{SUBMISSION_DIR}.tgz .")
 end
 
 task default: :prepare
