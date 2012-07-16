@@ -7,6 +7,10 @@ module LambdaDash
     def simulate(map_path)
       reader, writer = IO.pipe
       pid            = spawn("#{ROOT_DIR}/bin/run", in: map_path, out: writer)
+      trap(:INT) do
+        Process.kill(:INT, pid)
+        exit
+      end
       Process.detach(pid)
       writer.close
       thread = Thread.new do

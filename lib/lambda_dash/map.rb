@@ -107,9 +107,9 @@ module LambdaDash
       @total_lambdas = 0
       @lambdas       = [ ]
       @lifts         = [ ]
-      @rockys        = [ ]
-      @horocks       = [ ]
-      @beards        = [ ]
+      @rockys        = { }
+      @horocks       = { }
+      @beards        = { }
       trampolines    = { }
       targets        = { }
       each do |cell|
@@ -119,13 +119,13 @@ module LambdaDash
         elsif cell.lift?
           @lifts << cell
         elsif cell.rocky?
-          @rockys  << cell
+          @rockys[cell] = true
           if cell.horock?
-            @horocks       << cell
+            @horocks[cell] = true
             @total_lambdas += 1
           end
         elsif cell.beard?
-          @beards << cell
+          @beards[cell] = true
         elsif cell.trampoline?
           trampolines[cell.to_s] = cell
         elsif cell.target?
@@ -178,14 +178,14 @@ module LambdaDash
       elsif old.beard?
         @beards.delete(old)
       end
-      @cells[my][mx] = Cell.new(ascii, x, y)
+      cell = @cells[my][mx] = Cell.new(ascii, x, y)
       if ascii == "*" or ascii == "@"
-        @rockys  << @cells[my][mx]
-        @horocks << @cells[my][mx] if ascii == "@"
+        @rockys[cell]  = true
+        @horocks[cell] = true if ascii == "@"
       elsif ascii == "W"
-        @beards << @cells[my][mx]
+        @beards[cells] = true
       elsif ascii == "\\"
-        @lambdas << @cells[my][mx]
+        @lambdas << cells
       end
     end
 
@@ -216,13 +216,13 @@ module LambdaDash
 
     def update(robot)
       updates = [ ]
-      cells_to_update = @rockys
+      cells_to_update = @rockys.keys
       if not @beards.empty?          and
          @metadata[:growth].nonzero? and
          robot.move_count % @metadata[:growth] == 0
-        cells_to_update += @beards
-        cells_to_update.sort_by! { |cell| [cell.y, cell.x] }
+        cells_to_update += @beards.keys
       end
+      cells_to_update.sort_by! { |cell| [cell.y, cell.x] }
       cells_to_update.each do |cell|
         update_cell(cell, updates)
       end
@@ -231,20 +231,13 @@ module LambdaDash
           self[lift.x, lift.y] = "O"
         end
       end
-      rock_added  = false
-      beard_added = false
       updates.each do |x, y, ascii|
         self[x, y] = ascii
-        rocky       = ascii == "*" || ascii == "@"
-        rock_added  = true if rocky
-        beard_added = true if ascii == "W"
-        if rocky and y > 1 and self[x, y - 1].robot?
+        if (ascii == "*" or ascii == "@") and y > 1 and self[x, y - 1].robot?
           robot.die
           break
         end
       end
-      @rockys.sort_by! { |cell| [cell.x, cell.y] } if rock_added
-      @beards.sort_by! { |cell| [cell.x, cell.y] } if beard_added
       @water_level  = @metadata[:water]
       @water_level += robot.move_count / @metadata[:flooding] \
         if @metadata[:flooding].nonzero?
