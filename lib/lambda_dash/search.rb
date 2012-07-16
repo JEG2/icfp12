@@ -28,9 +28,9 @@ module LambdaDash
     end
 
     def pruned_search
-      best  = robot.dup
-      queue = [best]
-      @seen = {best.map.hash_key => best.score}
+      best    = robot.dup
+      queue   = [best]
+      @seen   = {best.map.hash_key => best.score}
       while not time_up? and (current = queue.shift)
         added_moves = false
         current.legal_moves.each do |move|
@@ -48,9 +48,10 @@ module LambdaDash
           end
           break if time_up?
         end
-        queue = prioritize_moves(queue) if added_moves
+        queue = prioritize_moves(queue) if not time_up? and added_moves
       end
-      best.moves
+      answer = best.moves
+      answer.empty? ? "A" : answer
     end
 
     private
