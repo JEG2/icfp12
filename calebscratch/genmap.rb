@@ -23,15 +23,15 @@ if(total < 100)
 end
 
 map[0].each { |temp|
-  temp.replace("X")
+  temp.replace("#")
 }
 $stderr.puts "map size is #{map.count}"
 map.last.each { |temp|
-  temp.replace("X")
+  temp.replace("#")
 }
 map.each { |temp|
-  temp[0].replace("X")
-  temp.last.replace("X")
+  temp[0].replace("#")
+  temp.last.replace("#")
 }
 
 potentialspots=length*2+width*2-4-1
@@ -62,22 +62,22 @@ map.each { |myrow|
    y=y+1
    if(mycell.eql? " ") 
      myrand=rand(1-100)
-     $stderr.puts "cell #{x},#{y} myrand is #{myrand} "
+     #$stderr.puts "cell #{x},#{y} myrand is #{myrand} "
      #$stderr.puts "myrand is #{myrand} "
      if(myrand <= percent_lambdas)
-        $stderr.puts "making this a lambda"
-        mycell.replace("/")
+        #$stderr.puts "making this a lambda"
+        mycell.replace("\")
      elsif(myrand <= percent_rocks+percent_lambdas)
-        $stderr.puts "making this a rock"
+        #$stderr.puts "making this a rock"
         mycell.replace("*")
      elsif(myrand <= percent_rocks+percent_lambdas+percent_earth)
-        $stderr.puts "making this a earth"
+        #$stderr.puts "making this a earth"
         mycell.replace(".")
      elsif(myrand <= percent_rocks+percent_lambdas+percent_earth+percent_walls)
-        $stderr.puts "making this a wall"
-        mycell.replace("X")
+        #$stderr.puts "making this a wall"
+        mycell.replace("#")
      else
-        $stderr.puts "making this a empty"
+        #$stderr.puts "making this a empty"
      end
    end
   } 
