@@ -65,12 +65,12 @@ module LambdaDash
          neighbors=@map.neighbors(cell.x,cell.y,false).reject { |curcell|
              curcell.impassable?
          }
-         p "neighbors contains #{neighbors.count} entries, #{neighbors}"
+         #p "neighbors contains #{neighbors.count} entries, #{neighbors}"
          score-=1
          oldneighbors = Array.new(neighbors)
          while ( score >=0 and oldneighbors.size>0) do
            oldneighbors = Array.new(neighbors)
-           p "oldneighbors contains #{oldneighbors.count} entries"
+           #p "oldneighbors contains #{oldneighbors.count} entries"
            neighbors.clear
            #p "checking that neighbors is empty.  Contains #{neighbors.count} entries."
            oldneighbors.each { |curcell|
