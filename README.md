@@ -1,12 +1,17 @@
-icfp12
+Team
+====
 
-Team: OKC Edmonders
+OKC Edmonders
 
-Registration Number: 96554412
+Team Members
+------------
 
-James Gray,
-Tim Nordloh,
-Ed Livengood,
+James Gray
+Tim Nordloh
+Ed Livengood
 Luke DeWitt
 
-======
+About This Solution
+-------------------
+
+...

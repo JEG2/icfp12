@@ -6,34 +6,8 @@ module LambdaDash
       @time_up = false
     end
 
-    attr_reader :map, :robot, :algorithm
+    attr_reader :map, :robot
     attr_writer :time_up
-
-    def find_moves
-      reader, writer = IO.pipe
-      pid            = fork do
-        reader.close
-        @time_up = false
-        trap(:INT) do
-          @time_up = true
-        end
-        writer.print send(algorithm)
-      end
-      writer.close
-      thread = Thread.new do
-        begin
-          sleep 150
-          Process.kill(:INT, pid)
-          sleep 10
-          Process.kill(:KILL, pid)
-        rescue
-          # do nothing:  our process is gone
-        end
-      end
-      reader.read
-    ensure
-      thread.kill if thread
-    end
 
     def fast_test
       "A"
