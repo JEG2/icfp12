@@ -46,6 +46,7 @@ module LambdaDash
               queue << new_move
             end
           end
+          break if time_up?
         end
         queue = prioritize_moves(queue) if added_moves
       end

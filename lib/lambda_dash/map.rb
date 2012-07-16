@@ -180,12 +180,10 @@ module LambdaDash
       end
       @cells[my][mx] = Cell.new(ascii, x, y)
       if ascii == "*" or ascii == "@"
-        @rockys << @cells[my][mx]
-        @rockys.sort_by! { |cell| [cell.x, cell.y] }
+        @rockys  << @cells[my][mx]
         @horocks << @cells[my][mx] if ascii == "@"
       elsif ascii == "W"
         @beards << @cells[my][mx]
-        @beards.sort_by! { |cell| [cell.x, cell.y] }
       elsif ascii == "\\"
         @lambdas << @cells[my][mx]
       end
@@ -233,13 +231,20 @@ module LambdaDash
           self[lift.x, lift.y] = "O"
         end
       end
+      rock_added  = false
+      beard_added = false
       updates.each do |x, y, ascii|
         self[x, y] = ascii
-        if (ascii == "*" or ascii == "@") and y > 1 and self[x, y - 1].robot?
+        rocky       = ascii == "*" || ascii == "@"
+        rock_added  = true if rocky
+        beard_added = true if ascii == "W"
+        if rocky and y > 1 and self[x, y - 1].robot?
           robot.die
           break
         end
       end
+      @rockys.sort_by! { |cell| [cell.x, cell.y] } if rock_added
+      @beards.sort_by! { |cell| [cell.x, cell.y] } if beard_added
       @water_level  = @metadata[:water]
       @water_level += robot.move_count / @metadata[:flooding] \
         if @metadata[:flooding].nonzero?
