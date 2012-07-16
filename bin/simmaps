@@ -33,7 +33,7 @@ function checkqueue {
 	done
 }
  
-for File in ../data/*
+for File in ../data/$1
 do
 	./simtests $File &
 	PID=$!
