@@ -183,9 +183,9 @@ module LambdaDash
         @rockys[cell]  = true
         @horocks[cell] = true if ascii == "@"
       elsif ascii == "W"
-        @beards[cells] = true
+        @beards[cell] = true
       elsif ascii == "\\"
-        @lambdas << cells
+        @lambdas << cell
       end
     end
 
